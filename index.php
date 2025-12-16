@@ -37,9 +37,10 @@ include "./conn/connectDB.php";
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     </ul>
-                    <span class="text-white">
-                       <?= $_SESSION['username'] ?? 'ผู้ใช้'; ?>
+                    <span class="border rounded px-3 py-1 text-white">
+                     <label>USER :</label>  <?= $_SESSION['user_name']; ?>
                     </span>
+                        <a href="login/logout.php" class="btn btn-outline-light btn-sm">ออกจากระบบ</a>
                 </div>
             </div>
         </nav>
