@@ -1,6 +1,11 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login/login.php");
+    exit;
+}
 include "./conn/connectDB.php";
-
+//ดึง
 if (isset($_GET['id'])) {
 
     $id = $conn->real_escape_string($_GET['id']);
@@ -24,31 +29,38 @@ if (isset($_GET['id'])) {
 }
 
 
-
-if (isset($_POST['add_lecturer'])) {
-    $name = trim($_POST['lecturer_name']);
-    $imgPath = "";
-    // ตรวจสอบว่ามีการอัปโหลดไฟล์หรือไม่
-    if (!empty($_FILES['img_lecturer']['name'])) {
-        $targetDir = "../images/lecturer/";
-        if (!file_exists($targetDir)) mkdir($targetDir, 0777, true);
-        $imgPath = $targetDir . basename($_FILES['img_lecturer']['name']);
-        move_uploaded_file($_FILES['img_lecturer']['tmp_name'], $imgPath);
-    }
+//อัพ
+if (isset($_POST['add_training'])) {
+    $topic_id = $_POST['topic_id'];
+    $name = trim($_POST['personal_name']);
+    $faculty_id = trim($_POST['faculty_id']);
+    $phone = trim($_POST['tel']);
+    $email = trim($_POST['email']);
     // ตรวจสอบชื่อซ้ำ
-    $check_sql = "SELECT * FROM lecturer WHERE lecturer_name = '$name'";
+    $check_sql = "SELECT * FROM training WHERE personal_name = '$name'AND topic_id = '$topic_id'";
     $check_result = $conn->query($check_sql);
     if ($check_result->num_rows > 0) {
-        echo "<script>alert('ชื่อวิทยากรซ้ำกับข้อมูลที่มีอยู่ในตาราง');</script>";
+        echo "<script>alert('ชื่อผู้ลงทะเบียนซ้ำ');</script>";
     } else {
-        $insert_sql = "INSERT INTO lecturer (lecturer_name, img_lecturer)
-                       VALUES ('$name', '$imgPath')";
+        $insert_sql = "INSERT INTO training (topic_id,personal_name,faculty_id,tel,email)
+                       VALUES ('$topic_id','$name', '$faculty_id','$phone','$email')";
         if ($conn->query($insert_sql)) {
-            echo "<script>window.location='lecturer.php';</script>";
+            echo "<script>window.location='training_detail.php?id=$topic_id'';</script>";
         } else {
             echo "<script>alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');</script>";
         }
     }
+}
+
+
+//จำนวน
+$topic_id = $row['topic_id']; 
+$count_sql = "SELECT COUNT(*) AS total FROM training WHERE topic_id = '$topic_id'";
+$count_result = $conn->query($count_sql);
+$total = 0;
+if ($count_result->num_rows > 0) {
+    $count_row = $count_result->fetch_assoc();
+    $total = $count_row['total'];
 }
 ?>
 
@@ -110,8 +122,9 @@ if (isset($_POST['add_lecturer'])) {
 
             <div class="container mt-5 mb-5">
                 <div class="card shadow-lg border-0">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="m-0"><i class="bi bi-journal-text"></i> รายละเอียดการอบรม</h4>
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h4><i class="bi bi-journal-text"></i> รายละเอียดการอบรม</h4> 
+                        <h5>ผู้เข้าร่วมทั้งหมด <span class="fw-light small"><?= $total ?></span> คน</h5>
                     </div>
 
                     <div class="card-body">
@@ -146,6 +159,7 @@ if (isset($_POST['add_lecturer'])) {
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <form method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="topic_id" value="<?php echo $row['topic_id']; ?>">
                                                 <div class="modal-header bg-success text-white">
                                                     <h5 class="modal-title">เพิ่มข้อมูลผู้เข้าร่วมอบรม</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -154,14 +168,25 @@ if (isset($_POST['add_lecturer'])) {
                                                     <label>ชื่อผู้เข้าร่วมอบรม:</label>
                                                     <input type="text" name="personal_name" class="form-control mb-3" required>
                                                     <label>หน่วยงาน:</label>
-                                                    <input type="text" name="faculty_id" class="form-control mb-3" required>
+                                                    <select name="faculty_id" class="form-select mb-3" required>
+                                                        <option value="" disabled selected>เลือกหน่วยงานสิ</option>
+                                                        <?php
+                                                        $sql_faculty = "SELECT * FROM faculty";
+                                                        $result_faculty = $conn->query($sql_faculty);
+                                                        if ($result_faculty->num_rows > 0) {
+                                                            while ($row_faculty = $result_faculty->fetch_assoc()) {
+                                                                echo '<option value="' . $row_faculty['faculty_id'] . '">' . $row_faculty['faculty_name'] . '</option>';
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
                                                     <label>เบอร์โทร:</label>
                                                     <input type="text" name="tel" class="form-control mb-3" required>
                                                     <label>อีเมล:</label>
                                                     <input type="text" name="email" class="form-control mb-3" required>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="submit" name="add_lecturer" class="btn btn-success">บันทึก</button>
+                                                    <button type="submit" name="add_training" class="btn btn-success">บันทึก</button>
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ยกเลิก</button>
                                                 </div>
                                             </form>
@@ -171,14 +196,42 @@ if (isset($_POST['add_lecturer'])) {
 
 
                                 <div class="modal fade" id="showlist" tabindex="-1">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header bg-success">
                                                 <h5 class="modal-title text-white">รายชื่อผู้เข้าร่วมอบรม</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                               
+                                                <table class="table table-striped">
+                                                    <tr>
+                                                        <th>training_id</th>
+                                                        <th>personal_name</th>
+                                                        <th>faculty_id</th>
+                                                        <th>tel</th>
+                                                        <th>email</th>
+                                                    </tr>
+
+
+                                                    <?php
+                                                    $topic_id = $row['topic_id'];
+                                                    $sql = "select*from training WHERE topic_id = '$topic_id'";
+                                                    $result = mysqli_query($conn, $sql);
+                                                    while ($row = mysqli_fetch_array($result)) {
+                                                    ?>
+                                                        <tr>
+                                                            <td><?= $row["training_id"] ?></td>
+                                                            <td><?= $row["personal_name"] ?></td>
+                                                            <td><?= $row["faculty_id"] ?></td>
+                                                            <td><?= $row["tel"] ?></td>
+                                                            <td><?= $row["email"] ?></td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    mysqli_close($conn);
+                                                    ?>
+                                                </table>
+
                                             </div>
 
                                             <div class="modal-footer">

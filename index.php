@@ -28,7 +28,21 @@ include "./conn/connectDB.php";
 
 <body style="background-color: #d7e7f7ff;">
     <header>
-        <!-- place navbar here -->
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid bg-primary navbar-dark">
+                <a class="navbar-brand fs-4 " href="#">ระบบอบรม</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    </ul>
+                    <span class="text-white">
+                       <?= $_SESSION['username'] ?? 'ผู้ใช้'; ?>
+                    </span>
+                </div>
+            </div>
+        </nav>
     </header>
     <main>
         <div class="container-fluid">
@@ -63,61 +77,61 @@ include "./conn/connectDB.php";
             }
             ?>
 
- <div class="row justify-content-center">
-            <?php
-            $sql = "SELECT t.*, l.lecturer_name 
+            <div class="row justify-content-center">
+                <?php
+                $sql = "SELECT t.*, l.lecturer_name 
             FROM topic t 
             LEFT JOIN lecturer l ON t.lecturer_id = l.lecturer_id
             ORDER BY t.topic_id ASC";
-            $result = $conn->query($sql);
+                $result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-            ?>
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                ?>
 
-                    <div class="col-md-5 col-sm-10 mb-3 mt-3">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title text-primary fw-bold"><?php echo $row['topic_header']; ?></h5>
+                        <div class="col-md-5 col-sm-10 mb-3 mt-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-primary fw-bold"><?php echo $row['topic_header']; ?></h5>
 
-                                <p class="card-text text-muted small">
-                                    <?php echo mb_substr($row['topic_detail'], 0, 100, 'UTF-8') . '...'; ?>
-                                </p>
+                                    <p class="card-text text-muted small">
+                                        <?php echo mb_substr($row['topic_detail'], 0, 100, 'UTF-8') . '...'; ?>
+                                    </p>
 
-                                <ul class="list-group list-group-flush small mb-3">
-                                    <li class="list-group-item px-0">
-                                        <strong>วันที่:</strong> <?php echo $row['start']; ?> ถึง <?php echo $row['end']; ?>
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        <strong>สถานที่:</strong> <?php echo $row['place']; ?>
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        <strong>วิทยากร:</strong> <?php echo $row['lecturer_name']; ?>
-                                    </li>
-                                </ul>
+                                    <ul class="list-group list-group-flush small mb-3">
+                                        <li class="list-group-item px-0">
+                                            <strong>วันที่:</strong> <?php echo $row['start']; ?> ถึง <?php echo $row['end']; ?>
+                                        </li>
+                                        <li class="list-group-item px-0">
+                                            <strong>สถานที่:</strong> <?php echo $row['place']; ?>
+                                        </li>
+                                        <li class="list-group-item px-0">
+                                            <strong>วิทยากร:</strong> <?php echo $row['lecturer_name']; ?>
+                                        </li>
+                                    </ul>
 
-                                <div class="d-flex justify-content-between mt-auto">
-                                    <a href="training_detail.php?id=<?php echo $row['topic_id']; ?>"
-                                        class="btn btn-success btn-sm w-100 text-white">
+                                    <div class="d-flex justify-content-between mt-auto">
+                                        <a href="training_detail.php?id=<?php echo $row['topic_id']; ?>"
+                                            class="btn btn-success btn-sm w-100 text-white">
 
-                                        <i class="bi bi-eye"></i> ดูรายละเอียดเพิ่มเติม
-                                    </a>
+                                            <i class="bi bi-eye"></i> ดูรายละเอียดเพิ่มเติม
+                                        </a>
+                                    </div>
+
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                  
-            <?php
+
+                <?php
+                    }
+                } else {
+                    // กรณีไม่มีข้อมูล
+                    echo "<div class='col-12'><div class='alert alert-secondary text-center'>ไม่พบข้อมูลการอบรม</div></div>";
                 }
-            } else {
-                // กรณีไม่มีข้อมูล
-                echo "<div class='col-12'><div class='alert alert-secondary text-center'>ไม่พบข้อมูลการอบรม</div></div>";
-            }
-            ?>
+                ?>
 
 
-        </div>
+            </div>
     </main>
     <footer>
         <!-- place footer here -->
