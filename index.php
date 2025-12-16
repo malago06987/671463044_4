@@ -1,6 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login/login.php");
+    exit;
+}
 include "./conn/connectDB.php";
-
 ?>
 
 
@@ -19,16 +23,7 @@ include "./conn/connectDB.php";
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet" />
-    <style>
-        /* เพิ่ม CSS เพื่อกำหนดขนาดรูปภาพให้สวยงาม */
-        .carousel-item img {
-            height: 400px;
-            /* ปรับความสูงตามต้องการ */
-            object-fit: cover;
-            /* ให้รูปเต็มพื้นที่โดยไม่เสียสัดส่วน */
-            width: 100%;
-        }
-    </style>
+
 </head>
 
 <body style="background-color: #d7e7f7ff;">
@@ -102,7 +97,7 @@ include "./conn/connectDB.php";
                                 </ul>
 
                                 <div class="d-flex justify-content-between mt-auto">
-                                    <a href="topic_detail.php?id=<?php echo $row['topic_id']; ?>"
+                                    <a href="training_detail.php?id=<?php echo $row['topic_id']; ?>"
                                         class="btn btn-success btn-sm w-100 text-white">
 
                                         <i class="bi bi-eye"></i> ดูรายละเอียดเพิ่มเติม
