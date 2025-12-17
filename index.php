@@ -12,7 +12,7 @@ include "./conn/connectDB.php";
 <html lang="en">
 
 <head>
-    <title>Title</title>
+    <title>ระบบเข้าร่วมอบรม</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -37,10 +37,10 @@ include "./conn/connectDB.php";
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     </ul>
-                    <span class="border rounded px-3 py-1 text-white">
-                     <label>USER :</label>  <?= $_SESSION['user_name']; ?>
+                    <span class="border rounded px-3 py-1 text-white me-3">
+                        <label>USER :</label> <?= $_SESSION['user_name']; ?>
                     </span>
-                        <a href="login/logout.php" class="btn btn-outline-light btn-sm">ออกจากระบบ</a>
+                    <a href="login/logout.php" class="btn btn-danger">ออกจากระบบ</a>
                 </div>
             </div>
         </nav>
@@ -77,6 +77,11 @@ include "./conn/connectDB.php";
                 echo "<div class='alert alert-warning'>ไม่พบไฟล์รูปภาพในโฟลเดอร์ $folder_name</div>";
             }
             ?>
+
+            <div class="input-group mb-3 w-50 mx-auto mt-4">
+                <input type="search" class="form-control form-control-lg" placeholder="ค้นหา" aria-label="Search">
+            </div>
+
 
             <div class="row justify-content-center">
                 <?php
@@ -147,6 +152,30 @@ include "./conn/connectDB.php";
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+        <script type="text/javascript">
+    $(document).ready(function(){
+        $("#code").keyup(function(event){
+            event.preventDefault();
+            $.ajax({
+                url: "show.php",
+                method: "GET",
+                data: { 
+                    data1: $("#code").val()
+                },
+                success: function(data){
+                    $("#div1").html(data);
+                },
+                error: function(xhr, status, error) {
+                    alert("Error: " + xhr.status + " - " + error);
+                }
+            });
+        });
+    });
+    </script>
+
 </body>
 
 </html>

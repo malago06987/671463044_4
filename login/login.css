@@ -10,17 +10,6 @@ body {
     }
 }
 
-.login-box {
-    background: url(https://i.imgur.com/73BxBuI.png);
-    background-size: cover;
-    background-position: center;
-    padding: 50px;
-    margin: 50px auto;
-    min-height: 700px;
-    -webkit-box-shadow: 0 2px 60px -5px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 60px -5px rgba(0, 0, 0, 0.1);
-}
-
 .logo {
     font-family: "Script MT";
     font-size: 54px;
@@ -104,3 +93,11 @@ body {
 .carousel-indicators li {
     cursor: pointer;
 }
+
+
+
+
+
+
+
+

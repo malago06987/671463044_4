@@ -5,7 +5,13 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 include "./conn/connectDB.php";
-//ดึง
+//ดึงข้อมูลข้อมูลผู้เข้าร่วมอบรม
+$user_id = $_SESSION['user_id'];
+$user = "SELECT * FROM users WHERE user_id = '$user_id'";
+$result_user = $conn->query($user);
+$user_data = $result_user->fetch_assoc();
+
+//ดึงหัวข้อ
 if (isset($_GET['id'])) {
 
     $id = $conn->real_escape_string($_GET['id']);
@@ -40,7 +46,7 @@ if (isset($_POST['add_training'])) {
     $check_sql = "SELECT * FROM training WHERE personal_name = '$name'AND topic_id = '$topic_id'";
     $check_result = $conn->query($check_sql);
     if ($check_result->num_rows > 0) {
-        echo "<script>alert('ชื่อผู้ลงทะเบียนซ้ำ');</script>";
+        echo "<script>alert('ผู้ลงทะเบียนซ้ำ');</script>";
     } else {
         $insert_sql = "INSERT INTO training (topic_id,personal_name,faculty_id,tel,email)
                        VALUES ('$topic_id','$name', '$faculty_id','$phone','$email')";
@@ -54,7 +60,7 @@ if (isset($_POST['add_training'])) {
 
 
 //จำนวน
-$topic_id = $row['topic_id']; 
+$topic_id = $row['topic_id'];
 $count_sql = "SELECT COUNT(*) AS total FROM training WHERE topic_id = '$topic_id'";
 $count_result = $conn->query($count_sql);
 $total = 0;
@@ -68,7 +74,7 @@ if ($count_result->num_rows > 0) {
 <html lang="en">
 
 <head>
-    <title>Title</title>
+    <title>ระบบเข้าร่วมอบรม</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -81,9 +87,24 @@ if ($count_result->num_rows > 0) {
         rel="stylesheet" />
 </head>
 
-<body>
+<body style="background-color: #d7e7f7ff;">
     <header>
-        <!-- place navbar here -->
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid bg-primary navbar-dark">
+                <a class="navbar-brand fs-4 " href="#">ระบบอบรม</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    </ul>
+                    <span class="border rounded px-3 py-1 text-white me-3">
+                        <label>USER :</label> <?= $_SESSION['user_name']; ?>
+                    </span>
+                    <a href="login/logout.php" class="btn btn-danger">ออกจากระบบ</a>
+                </div>
+            </div>
+        </nav>
     </header>
     <main>
         <div class="container-fluid">
@@ -123,7 +144,7 @@ if ($count_result->num_rows > 0) {
             <div class="container mt-5 mb-5">
                 <div class="card shadow-lg border-0">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h4><i class="bi bi-journal-text"></i> รายละเอียดการอบรม</h4> 
+                        <h4><i class="bi bi-journal-text"></i> รายละเอียดการอบรม</h4>
                         <h5>ผู้เข้าร่วมทั้งหมด <span class="fw-light small"><?= $total ?></span> คน</h5>
                     </div>
 
@@ -161,32 +182,21 @@ if ($count_result->num_rows > 0) {
                                             <form method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="topic_id" value="<?php echo $row['topic_id']; ?>">
                                                 <div class="modal-header bg-success text-white">
-                                                    <h5 class="modal-title">เพิ่มข้อมูลผู้เข้าร่วมอบรม</h5>
+                                                    <h5 class="modal-title">ยืนยันข้อมูลผู้เข้าร่วม</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <label>ชื่อผู้เข้าร่วมอบรม:</label>
-                                                    <input type="text" name="personal_name" class="form-control mb-3" required>
+                                                    <input type="text"name="personal_name"class="form-control mb-3"value="<?= $user_data['fullname']; ?>"required>
                                                     <label>หน่วยงาน:</label>
-                                                    <select name="faculty_id" class="form-select mb-3" required>
-                                                        <option value="" disabled selected>เลือกหน่วยงานสิ</option>
-                                                        <?php
-                                                        $sql_faculty = "SELECT * FROM faculty";
-                                                        $result_faculty = $conn->query($sql_faculty);
-                                                        if ($result_faculty->num_rows > 0) {
-                                                            while ($row_faculty = $result_faculty->fetch_assoc()) {
-                                                                echo '<option value="' . $row_faculty['faculty_id'] . '">' . $row_faculty['faculty_name'] . '</option>';
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
+                                                    <input type="text"name="faculty_id"class="form-control mb-3"value="<?= $user_data['faculty_id']; ?>"required>
                                                     <label>เบอร์โทร:</label>
-                                                    <input type="text" name="tel" class="form-control mb-3" required>
+                                                    <input type="text"name="tel"class="form-control mb-3"value="<?= $user_data['tel']; ?>"required>
                                                     <label>อีเมล:</label>
-                                                    <input type="text" name="email" class="form-control mb-3" required>
+                                                    <input type="email"name="email"class="form-control mb-3"value="<?= $user_data['email']; ?>"required>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="submit" name="add_training" class="btn btn-success">บันทึก</button>
+                                                    <button type="submit" name="add_training" class="btn btn-success">ลงทะเบียน</button>
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ยกเลิก</button>
                                                 </div>
                                             </form>

@@ -84,27 +84,27 @@ if ((isset($_REQUEST['user_name'])) && isset($_REQUEST['password'])) {
   </header>
   <main>
 
-    <section class="body">
-      <div class="container">
-        <div class="login-box">
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="logo">
-                <span class="logo-font">Go</span>Snippets
-              </div>
-            </div>
+    <section class="min-vh-100 d-flex justify-content-center align-items-center bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        <div class="card shadow p-4">
+          
+          <div class="text-center mb-2">
+            <h3 class="fw-bold">
+              <span class="text-primary">ระบบ</span>อบรมณ์
+            </h3>
           </div>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
               <div id="loginForm">
 
 
                 <br>
-                <h3 class="header-title">ล็อคอิน</h3>
                 <form class="login-form" method="post" action="">
                   <div class="form-group">
                     <label for="user_name">ชื่อ</label>
-                    <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Email or UserName" required>
+                    <input type="text" name="user_name" id="user_name" class="form-control" placeholder="UserName" required>
                   </div>
                   <div class="form-group">
                     <label for="password">รหัสผ่าน</label>
@@ -114,7 +114,7 @@ if ((isset($_REQUEST['user_name'])) && isset($_REQUEST['password'])) {
                     <button type="submit" name="login" class="btn btn-primary w-100">ล็อคอิน</button>
                   </div>
                   <div class="form-group">
-                    <div class="text-center">New Member?
+                    <div class="text-center">ผู้ใช้ใหม่หรอ?
                       <a href="#!" onclick="showSignup()">สร้างบัญชีใหม่</a>
                     </div>
                   </div>
@@ -122,7 +122,6 @@ if ((isset($_REQUEST['user_name'])) && isset($_REQUEST['password'])) {
               </div>
               <div class="signupForm">
                 <form class="login-form" id="signupForm" action="register.php" style="display:none;">
-                  <h3 class="header-title">Sign UP</h3>
                   <div class="form-group">
                     <input type="text" class="form-control"
                       name="user_name" placeholder="User Name">
@@ -158,7 +157,7 @@ if ((isset($_REQUEST['user_name'])) && isset($_REQUEST['password'])) {
                   </div>
 
                   <div class="form-group">
-                    <button class="btn btn-primary btn-block">SIGN UP</button>
+                    <button class="btn btn-primary btn-block">ลงทะเบียน</button>
                   </div>
 
                   <div class="form-group">
@@ -170,39 +169,6 @@ if ((isset($_REQUEST['user_name'])) && isset($_REQUEST['password'])) {
 
                 </form>
 
-              </div>
-            </div>
-            <div class="col-sm-6 hide-on-mobile">
-              <div id="demo" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ul class="carousel-indicators">
-                  <li data-target="#demo" data-slide-to="0" class="active"></li>
-                  <li data-target="#demo" data-slide-to="1"></li>
-                </ul>
-                <!-- The slideshow -->
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <div class="slider-feature-card">
-                      <img src="https://i.imgur.com/YMn8Xo1.png" alt="">
-                      <h3 class="slider-title">Title Here</h3>
-                      <p class="slider-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, odio!</p>
-                    </div>
-                  </div>
-                  <div class="carousel-item">
-                    <div class="slider-feature-card">
-                      <img src="https://i.imgur.com/Yi5KXKM.png" alt="">
-                      <h3 class="slider-title">Title Here</h3>
-                      <p class="slider-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione, debitis?</p>
-                    </div>
-                  </div>
-                </div>
-                <!-- Left and right controls -->
-                <a class="carousel-control-prev" href="#demo" data-slide="prev">
-                  <span class="carousel-control-prev-icon"></span>
-                </a>
-                <a class="carousel-control-next" href="#demo" data-slide="next">
-                  <span class="carousel-control-next-icon"></span>
-                </a>
               </div>
             </div>
           </div>
