@@ -79,11 +79,11 @@ include "./conn/connectDB.php";
             ?>
 
             <div class="input-group mb-3 w-50 mx-auto mt-4">
-                <input type="search" class="form-control form-control-lg" placeholder="ค้นหา" aria-label="Search">
+                <input type="search" class="form-control form-control-lg" id="search" placeholder="ค้นหา" aria-label="Search">
             </div>
 
 
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" id="result">
                 <?php
                 $sql = "SELECT t.*, l.lecturer_name 
             FROM topic t 
@@ -157,16 +157,16 @@ include "./conn/connectDB.php";
 
         <script type="text/javascript">
     $(document).ready(function(){
-        $("#code").keyup(function(event){
+        $("#search").keyup(function(event){
             event.preventDefault();
             $.ajax({
-                url: "show.php",
+                url: "fetch/show_topic.php",
                 method: "GET",
                 data: { 
-                    data1: $("#code").val()
+                    data1: $("#search").val()
                 },
                 success: function(data){
-                    $("#div1").html(data);
+                    $("#result").html(data);
                 },
                 error: function(xhr, status, error) {
                     alert("Error: " + xhr.status + " - " + error);
